@@ -63,6 +63,18 @@ func showChartInfo(c *gin.Context) {
 		return
 	}
 
+	registryClient, err := createOCIRegistryClientForChartPathOptions(
+		&name,
+		&client.ChartPathOptions,
+	)
+	if err != nil {
+		respErr(c, err)
+		return
+	}
+	if registryClient != nil {
+		client.SetRegistryClient(registryClient)
+	}
+
 	cp, err := client.ChartPathOptions.LocateChart(name, settings)
 	if err != nil {
 		respErr(c, err)
